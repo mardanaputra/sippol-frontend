@@ -22,23 +22,26 @@ export default function FetchInterceptor() {
         const isApiCall = urlStr && (urlStr.startsWith('/api/') || urlStr.includes('/api/'));
 
         if (isApiCall) {
-          // Redirect relative /api/ calls directly to the Laravel backend local server
-          const backendOrigin = (process.env.NEXT_PUBLIC_API_URL || 'https://managing-idiom-rack.ngrok-free.dev').replace(/\/$/, '');
-          if (typeof input === 'string') {
-            if (input.startsWith('/api/')) {
-              input = backendOrigin + input;
-              urlStr = input;
-            }
-          } else if (input instanceof URL) {
-            if (input.pathname.startsWith('/api/')) {
-              input = new URL(backendOrigin + input.pathname + input.search);
-              urlStr = input.toString();
-            }
-          } else if (input && typeof input === 'object' && 'url' in input) {
-            if (input.url.startsWith('/api/')) {
-              const newUrl = backendOrigin + new URL(input.url, window.location.origin).pathname + new URL(input.url, window.location.origin).search;
-              input = new Request(newUrl, input);
-              urlStr = input.url;
+          // If NEXT_PUBLIC_API_URL is defined, redirect directly to that backend origin.
+          // Otherwise, keep relative /api/ calls which are proxied by Next.js server rewrites.
+          const backendOrigin = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
+          if (backendOrigin) {
+            if (typeof input === 'string') {
+              if (input.startsWith('/api/')) {
+                input = backendOrigin + input;
+                urlStr = input;
+              }
+            } else if (input instanceof URL) {
+              if (input.pathname.startsWith('/api/')) {
+                input = new URL(backendOrigin + input.pathname + input.search);
+                urlStr = input.toString();
+              }
+            } else if (input && typeof input === 'object' && 'url' in input) {
+              if (input.url.startsWith('/api/')) {
+                const newUrl = backendOrigin + new URL(input.url, window.location.origin).pathname + new URL(input.url, window.location.origin).search;
+                input = new Request(newUrl, input);
+                urlStr = input.url;
+              }
             }
           }
 

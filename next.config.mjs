@@ -6,7 +6,7 @@ const nextConfig = {
     const backendUrl =
       process.env.INTERNAL_BACKEND_URL ||
       process.env.NEXT_PUBLIC_API_URL ||
-      'https://managing-idiom-rack.ngrok-free.dev';
+      'http://backend:8000';
     return [
       {
         source: '/api/:path*',
