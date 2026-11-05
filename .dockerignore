@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.gitignore
+.env*
+*.pem
+*.key
+auth.json
+README.md
+CLAUDE.md
+AGENTS.md
+scratch_check.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
