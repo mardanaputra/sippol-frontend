@@ -24,7 +24,8 @@ export default function FetchInterceptor() {
         if (isApiCall) {
           // If NEXT_PUBLIC_API_URL is defined, redirect directly to that backend origin.
           // Otherwise, keep relative /api/ calls which are proxied by Next.js server rewrites.
-          const backendOrigin = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
+          const runtimeApiUrl = (typeof window !== 'undefined' && window.__ENV__?.NEXT_PUBLIC_API_URL) || process.env.NEXT_PUBLIC_API_URL || '';
+          const backendOrigin = runtimeApiUrl.replace(/\/$/, '');
           if (backendOrigin) {
             if (typeof input === 'string') {
               if (input.startsWith('/api/')) {

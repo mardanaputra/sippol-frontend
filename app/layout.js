@@ -25,6 +25,9 @@ export default function RootLayout({ children }) {
       lang="id"
       className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} h-full antialiased scroll-smooth`}
     >
+      <head>
+        <script src="/api-env.js" />
+      </head>
       <body className="min-h-full flex flex-col">
         <FetchInterceptor />
         {children}

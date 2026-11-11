@@ -18,7 +18,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build arguments for environment variables embedded at build time
-ARG NEXT_PUBLIC_API_URL="http://localhost:8000"
+ARG NEXT_PUBLIC_API_URL=""
 ARG NEXT_PUBLIC_RECAPTCHA_SITE_KEY=""
 ARG INTERNAL_BACKEND_URL="http://backend:8000"
 

@@ -196,7 +196,7 @@ export default function AdminLogin() {
           {/* Google reCAPTCHA v2 */}
           <div className="flex justify-center py-1">
             <ReCAPTCHA
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LfNrjYtAAAAACTzDq41xhx2sj-19GKt_fgxp57x"}
+              sitekey={(typeof window !== 'undefined' && window.__ENV__?.NEXT_PUBLIC_RECAPTCHA_SITE_KEY) || process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LfNrjYtAAAAACTzDq41xhx2sj-19GKt_fgxp57x"}
               onChange={(token) => setCaptchaToken(token)}
             />
           </div>
