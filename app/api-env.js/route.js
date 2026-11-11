@@ -1,17 +1,23 @@
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  // Read process.env directly at runtime avoiding NEXT_PUBLIC_ build-time inlining
-  const envMap = process.env;
-  const apiUrl = envMap['NEXT_PUBLIC_API_URL'] || '';
-  const recaptchaKey = envMap['NEXT_PUBLIC_RECAPTCHA_SITE_KEY'] || '';
+  // Turbopack / Webpack aggressively replaces literal strings starting with "NEXT_PUBLIC_"
+  // with static empty strings at build time.
+  // Construct the environment variable keys dynamically at runtime to prevent compile-time inlining.
+  const env = process.env;
 
-  const env = {
+  const keyApi = ['NEXT', 'PUBLIC', 'API', 'URL'].join('_');
+  const keyRecaptcha = ['NEXT', 'PUBLIC', 'RECAPTCHA', 'SITE', 'KEY'].join('_');
+
+  const apiUrl = env[keyApi] || '';
+  const recaptchaKey = env[keyRecaptcha] || '';
+
+  const runtimeEnv = {
     NEXT_PUBLIC_API_URL: apiUrl,
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: recaptchaKey,
   };
 
-  const jsContent = `window.__ENV__ = ${JSON.stringify(env)};`;
+  const jsContent = `window.__ENV__ = ${JSON.stringify(runtimeEnv)};`;
 
   return new Response(jsContent, {
     status: 200,
