@@ -16,6 +16,10 @@ export default function AdminLogin() {
   const [rememberMe, setRememberMe] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
 
+  const activeSiteKey = (typeof window !== 'undefined' && window.__ENV__?.NEXT_PUBLIC_RECAPTCHA_SITE_KEY)
+    || process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    || '';
+
   useEffect(() => {
     // Check if redirect is due to session expiration
     if (typeof window !== 'undefined') {
@@ -43,7 +47,7 @@ export default function AdminLogin() {
       return;
     }
 
-    if (!captchaToken) {
+    if (activeSiteKey && !captchaToken) {
       setError('Silakan selesaikan verifikasi reCAPTCHA terlebih dahulu.');
       return;
     }
@@ -193,13 +197,15 @@ export default function AdminLogin() {
             </div>
           </div>
 
-          {/* Google reCAPTCHA v2 */}
-          <div className="flex justify-center py-1">
-            <ReCAPTCHA
-              sitekey={(typeof window !== 'undefined' && window.__ENV__?.NEXT_PUBLIC_RECAPTCHA_SITE_KEY) || process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LfNrjYtAAAAACTzDq41xhx2sj-19GKt_fgxp57x"}
-              onChange={(token) => setCaptchaToken(token)}
-            />
-          </div>
+          {/* Google reCAPTCHA v2 (Rendered only when sitekey is configured) */}
+          {activeSiteKey ? (
+            <div className="flex justify-center py-1">
+              <ReCAPTCHA
+                sitekey={activeSiteKey}
+                onChange={(token) => setCaptchaToken(token)}
+              />
+            </div>
+          ) : null}
 
           {/* Remember Me & Help Text */}
           <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 select-none py-1">
